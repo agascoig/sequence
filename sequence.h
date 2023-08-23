@@ -66,6 +66,9 @@ public:
 		offset += static_cast<long>(std::distance(data.begin(), f));
 		data.erase(data.begin(), f);
 		auto e = std::find_if(data.rbegin(), data.rend(), ztest);
+		if (e == data.rend()) {
+			return *this;
+		}
 		auto ef = e.base(); // create forward iterator
 		data.erase(ef, data.end());
 		return *this;
@@ -123,7 +126,7 @@ Sequence<T> elementwise(const Sequence<T> &x, const Sequence<T>& y)
 	auto result_off = y.offset - left;
 
 	std::transform(result.begin()+result_off,
-				   result.begin()+(result_off + y.data.size() - 1),
+				   result.begin()+(result_off + y.data.size()),
 		           y.data.begin(), result.begin()+result_off, F_bi());
 
 	return sresult.trim();
